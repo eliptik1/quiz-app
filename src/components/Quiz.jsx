@@ -1,11 +1,23 @@
 import { useState, useEffect } from "react";
 
+const parseOptions = (title) => {
+  const words = title.split(" ");
+  return words.length >= 4
+    ? words.slice(0, 4)
+    : [...words, "lorem", "ipsum", "dolor", "amet"].slice(0, 4);
+};
+
 export const Quiz = () => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(6);
+  const [timeLeft, setTimeLeft] = useState(5);
   const [canChoose, setCanChoose] = useState(false);
+  const [responses, setResponses] = useState([]);
+
+  useEffect(() => {
+    console.log(responses);
+  }, [responses]);
 
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/posts")
@@ -16,7 +28,7 @@ export const Quiz = () => {
         return response.json();
       })
       .then((data) => {
-        setQuestions(data.slice(0, 3));
+        setQuestions(data.slice(0, 3)); // number of questions
         setLoading(false);
       })
       .catch((error) => {
@@ -26,50 +38,101 @@ export const Quiz = () => {
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev > 0) {
-          return prev - 1;
-        } else {
-          clearInterval(timer);
-          setCanChoose(false);
-          setCurrentQuestion((prev) => prev + 1);
-          setTimeLeft(10); //question's total time
-          return 10;
-        }
-      });
-    }, 1000);
+    if (currentQuestion < questions.length) {
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev > 0) {
+            return prev - 1;
+          } else {
+            clearInterval(timer);
+            setCanChoose(false);
+            setResponses((prev) => [
+              ...prev,
+              {
+                questionNo: currentQuestion + 1,
+                question: questions[currentQuestion]?.title || "Not available",
+                answer: "empty",
+              },
+            ]);
+            setCurrentQuestion((prev) => prev + 1);
+            setTimeLeft(5); // question's total time
+            return 5;
+          }
+        });
+      }, 1000);
 
-    setTimeout(() => {
-      setCanChoose(true);
-    }, 3000); //disable buttons in the first 3 seconds
+      setTimeout(() => {
+        setCanChoose(true);
+      }, 3000); // disable buttons in the first 3 seconds
 
-    return () => clearInterval(timer);
-  }, [currentQuestion]);
+      return () => clearInterval(timer);
+    }
+  }, [currentQuestion, questions.length]);
+
+  const handleOptionClick = (option) => {
+    if (canChoose) {
+      setResponses((prev) => [
+        ...prev,
+        {
+          questionNo: currentQuestion + 1,
+          question: questions[currentQuestion].title,
+          answer: option,
+        },
+      ]);
+      setCanChoose(false);
+      setCurrentQuestion((prev) => prev + 1);
+      setTimeLeft(5);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  const question = questions[currentQuestion];
-
-  if (!question) {
-    return <div>Quiz Over</div>;
+  if (currentQuestion >= questions.length) {
+    const filteredResponses = Object.values(
+      responses.reduce((acc, response) => {
+        acc[response.questionNo] = response;
+        return acc;
+      }, {})
+    );
+    return (
+      <div>
+        <h2>Quiz Over</h2>
+        {filteredResponses.map((response, index) => (
+          <div key={index}>
+            <div>Question No: {response.questionNo}</div>
+            <div>Your Answer: {response.answer}</div>
+          </div>
+        ))}
+      </div>
+    );
   }
+
+  const question = questions[currentQuestion];
+  const options = parseOptions(question.title);
 
   return (
     <div>
       <div>
-        <h3>{question.title}</h3>
-        <p>{question.body}</p>
-      </div>
-      <div>
         <p>Time Left: {timeLeft} seconds</p>
       </div>
+      <div>
+        <h3>Question-{currentQuestion + 1}:</h3>
+        <p>{question.title}</p>
+      </div>
+
       <div className="flex gap-3">
-        <button disabled={!canChoose}>A</button>
-        <button disabled={!canChoose}>B</button>
-        <button disabled={!canChoose}>C</button>
-        <button disabled={!canChoose}>D</button>
+        {options.map((option, index) => (
+          <button
+            key={index}
+            className="flex-1 border-2 border-black"
+            onClick={() => handleOptionClick(option)}
+            disabled={!canChoose}
+          >
+            {option}
+          </button>
+        ))}
       </div>
     </div>
   );
