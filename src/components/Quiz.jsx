@@ -102,6 +102,7 @@ export const Quiz = ({ onRestart }) => {
     <QuestionScreen
       question={question}
       options={options}
+      questionTime={QUESTION_TIME}
       timeLeft={timeLeft}
       currentQuestion={currentQuestion}
       canChoose={canChoose}
