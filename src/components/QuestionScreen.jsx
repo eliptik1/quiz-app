@@ -7,9 +7,18 @@ export const QuestionScreen = ({
   currentQuestion,
   canChoose,
   handleOptionClick,
+  onExit,
 }) => {
   return (
     <div className="flex flex-col items-center w-[700px] shadow-lg bg-white p-8 rounded-2xl">
+      <div className="w-full">
+        <button
+          onClick={onExit}
+          className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Exit
+        </button>
+      </div>
       <CircularCountdown
         questionTime={questionTime}
         timeLeft={timeLeft}

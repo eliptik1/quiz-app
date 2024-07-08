@@ -3,15 +3,14 @@ import { QuestionScreen } from "./QuestionScreen";
 import { QuizResults } from "./QuizResults";
 import { parseOptions, fetchQuestions } from "../utils/quizUtils";
 
-const QUESTION_TIME = 30; // seconds
 const ALLOW_OPTIONS_TIME = 10; // seconds
 const NUMBER_OF_QUESTIONS = 10;
 
-export const Quiz = ({ onRestart }) => {
+export const Quiz = ({ onRestart, onExit, questionTime }) => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(QUESTION_TIME);
+  const [timeLeft, setTimeLeft] = useState(questionTime);
   const [canChoose, setCanChoose] = useState(false);
   const [responses, setResponses] = useState([]);
 
@@ -39,7 +38,7 @@ export const Quiz = ({ onRestart }) => {
             setCanChoose(false);
             addResponse("empty");
             nextQuestion();
-            return QUESTION_TIME;
+            return questionTime;
           }
         });
       }, 1000);
@@ -70,7 +69,7 @@ export const Quiz = ({ onRestart }) => {
 
   const nextQuestion = () => {
     setCurrentQuestion((prev) => prev + 1);
-    setTimeLeft(QUESTION_TIME);
+    setTimeLeft(questionTime);
   };
 
   const handleOptionClick = (option) => {
@@ -102,11 +101,12 @@ export const Quiz = ({ onRestart }) => {
     <QuestionScreen
       question={question}
       options={options}
-      questionTime={QUESTION_TIME}
+      questionTime={questionTime}
       timeLeft={timeLeft}
       currentQuestion={currentQuestion}
       canChoose={canChoose}
       handleOptionClick={handleOptionClick}
+      onExit={onExit}
     />
   );
 };
