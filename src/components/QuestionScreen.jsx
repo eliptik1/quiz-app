@@ -5,6 +5,7 @@ export const QuestionScreen = ({
   questionTime,
   timeLeft,
   currentQuestion,
+  totalQuestions,
   canChoose,
   handleOptionClick,
   onExit,
@@ -25,9 +26,9 @@ export const QuestionScreen = ({
         canChoose={canChoose}
         currentQuestion={currentQuestion}
       />
-      <div className="flex gap-2 justify-center mt-8 text-xl">
+      <div className="flex gap-2 self-start justify-center mt-8 text-xl">
         <h3 className="text-nowrap text-zinc-800">
-          Question {currentQuestion + 1}:
+          Question {currentQuestion + 1}/{totalQuestions}:
         </h3>
         <p>{question.title}</p>
       </div>

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-
-export const RangeSlider = ({ rangeType }) => {
-  const [totalQuestions, setTotalQuestions] = useState(10);
-  const [selectionDisableTime, setSelectionDisableTime] = useState(5);
-
+export const RangeSlider = ({
+  rangeType,
+  totalQuestions,
+  setTotalQuestions,
+  disableTimeMax,
+  selectionDisableTime,
+  setSelectionDisableTime,
+}) => {
   const handleTotalQuestions = (event) => {
     setTotalQuestions(event.target.value);
   };
@@ -12,35 +14,42 @@ export const RangeSlider = ({ rangeType }) => {
     setSelectionDisableTime(event.target.value);
   };
 
-  return (
-    <div className="flex flex-col items-center w-full">
+  return rangeType === "totalQuestions" ? (
+    <div className="flex flex-col items-center w-full mb-6">
       <label
         htmlFor="default-range"
-        className="block mb-2 font-medium text-gray-900 dark:text-white"
+        className="block mb-2 font-medium text-gray-900"
       >
-        {rangeType === "totalQuestions"
-          ? "Total questions:"
-          : "Selection disable time:"}
-        <span className="text-xl">
-          {rangeType === "totalQuestions"
-            ? totalQuestions
-            : selectionDisableTime}
-        </span>
+        Total questions:
+        <span className="text-xl"> {totalQuestions}</span>
       </label>
       <input
         id="default-range"
         type="range"
         min="3"
         max="20"
-        value={
-          rangeType === "totalQuestions" ? totalQuestions : selectionDisableTime
-        }
-        onChange={
-          rangeType === "totalQuestions"
-            ? handleTotalQuestions
-            : handleDisableTime
-        }
-        className="w-full h-2 bg-white shadow-md rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+        value={totalQuestions}
+        onChange={handleTotalQuestions}
+        className="w-full h-2 bg-white shadow-md rounded-lg appearance-none cursor-pointer"
+      />
+    </div>
+  ) : (
+    <div className="flex flex-col items-center w-full mb-6">
+      <label
+        htmlFor="default-range"
+        className="block mb-2 font-medium text-gray-900"
+      >
+        Selection disable time:
+        <span className="text-xl"> {selectionDisableTime}</span>
+      </label>
+      <input
+        id="default-range"
+        type="range"
+        min="0"
+        max={disableTimeMax}
+        value={selectionDisableTime}
+        onChange={handleDisableTime}
+        className="w-full h-2 bg-white shadow-md rounded-lg appearance-none cursor-pointer"
       />
     </div>
   );

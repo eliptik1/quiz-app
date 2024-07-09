@@ -3,10 +3,13 @@ import { QuestionScreen } from "./QuestionScreen";
 import { QuizResults } from "./QuizResults";
 import { parseOptions, fetchQuestions } from "../utils/quizUtils";
 
-const ALLOW_OPTIONS_TIME = 10; // seconds
-const NUMBER_OF_QUESTIONS = 10;
-
-export const Quiz = ({ onRestart, onExit, questionTime }) => {
+export const Quiz = ({
+  onRestart,
+  onExit,
+  questionTime,
+  selectionDisableTime,
+  totalQuestions,
+}) => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -20,7 +23,7 @@ export const Quiz = ({ onRestart, onExit, questionTime }) => {
 
   useEffect(() => {
     const loadQuestions = async () => {
-      const loadedQuestions = await fetchQuestions(NUMBER_OF_QUESTIONS);
+      const loadedQuestions = await fetchQuestions(totalQuestions);
       setQuestions(loadedQuestions);
       setLoading(false);
     };
@@ -45,7 +48,7 @@ export const Quiz = ({ onRestart, onExit, questionTime }) => {
 
       const optionTimeout = setTimeout(() => {
         setCanChoose(true);
-      }, ALLOW_OPTIONS_TIME * 1000);
+      }, selectionDisableTime * 1000);
 
       return () => {
         clearInterval(timer);
@@ -91,7 +94,13 @@ export const Quiz = ({ onRestart, onExit, questionTime }) => {
         return acc;
       }, {})
     );
-    return <QuizResults responses={filteredResponses} onRestart={onRestart} />;
+    return (
+      <QuizResults
+        responses={filteredResponses}
+        onRestart={onRestart}
+        onExit={onExit}
+      />
+    );
   }
 
   const question = questions[currentQuestion];
@@ -104,6 +113,7 @@ export const Quiz = ({ onRestart, onExit, questionTime }) => {
       questionTime={questionTime}
       timeLeft={timeLeft}
       currentQuestion={currentQuestion}
+      totalQuestions={totalQuestions}
       canChoose={canChoose}
       handleOptionClick={handleOptionClick}
       onExit={onExit}

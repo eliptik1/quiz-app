@@ -1,4 +1,4 @@
-export const QuizResults = ({ responses, onRestart }) => {
+export const QuizResults = ({ responses, onRestart, onExit }) => {
   return (
     <div className="mx-auto p-4 flex flex-col items-center">
       <h2 className="text-2xl font-bold mb-4 text-center">Quiz Over</h2>
@@ -40,12 +40,20 @@ export const QuizResults = ({ responses, onRestart }) => {
           })}
         </tbody>
       </table>
-      <button
-        onClick={onRestart}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
-      >
-        Retry Quiz
-      </button>
+      <div className="flex gap-4">
+        <button
+          onClick={onExit}
+          className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Exit
+        </button>
+        <button
+          onClick={onRestart}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
+        >
+          Retry Quiz
+        </button>
+      </div>
     </div>
   );
 };

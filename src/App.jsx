@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { Quiz } from "./components/Quiz";
 import { RangeSlider } from "./components/RangeSlider";
+import { TimeSelectButtons } from "./components/TimeSelectButtons";
 
 function App() {
   const [isQuizStarted, setIsQuizStarted] = useState(false);
   const [quizKey, setQuizKey] = useState(0);
+  const [selectedButton, setSelectedButton] = useState(2);
+  const [totalQuestions, setTotalQuestions] = useState(10);
   const [questionTime, setQuestionTime] = useState(30); //seconds
+  const [disableTimeMax, setDisableTimeMax] = useState(29); //seconds
+  const [selectionDisableTime, setSelectionDisableTime] = useState(5);
 
   const startQuiz = () => {
     setIsQuizStarted(true);
@@ -13,6 +18,11 @@ function App() {
 
   const exitQuiz = () => {
     setIsQuizStarted(false);
+    setTotalQuestions(10);
+    setQuestionTime(30);
+    setDisableTimeMax(29);
+    setSelectionDisableTime(5);
+    setSelectedButton(2);
   };
 
   const restartQuiz = () => {
@@ -24,33 +34,24 @@ function App() {
     <div className="bg-gradient-to-t from-slate-200 to-neutral-300 min-h-screen mx-auto p-4 flex flex-col gap-4 justify-center items-center">
       <h1 className="text-3xl font-bold mb-4 text-center">Quiz App</h1>
       {!isQuizStarted ? (
-        <div className="flex flex-col items-center">
-          <p>Question time:</p>
-          <div className="flex gap-4">
-            <button
-              onClick={() => setQuestionTime(5)}
-              className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded"
-            >
-              5s
-            </button>
-
-            <button
-              onClick={() => setQuestionTime(15)}
-              className="bg-amber-500 p-3 border-4 border-orange-800 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded"
-            >
-              15s
-            </button>
-
-            <button
-              onClick={() => setQuestionTime(30)}
-              className="bg-amber-500 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded"
-            >
-              30s
-            </button>
-          </div>
-
-          <RangeSlider />
-          <RangeSlider rangeType={"totalQuestions"} />
+        <div className="flex flex-col items-center w-[250px]">
+          <TimeSelectButtons
+            selectedButton={selectedButton}
+            setSelectedButton={setSelectedButton}
+            setQuestionTime={setQuestionTime}
+            setDisableTimeMax={setDisableTimeMax}
+            setSelectionDisableTime={setSelectionDisableTime}
+          />
+          <RangeSlider
+            disableTimeMax={disableTimeMax}
+            selectionDisableTime={selectionDisableTime}
+            setSelectionDisableTime={setSelectionDisableTime}
+          />
+          <RangeSlider
+            rangeType={"totalQuestions"}
+            totalQuestions={totalQuestions}
+            setTotalQuestions={setTotalQuestions}
+          />
 
           <button
             onClick={startQuiz}
@@ -65,6 +66,8 @@ function App() {
           onRestart={restartQuiz}
           onExit={exitQuiz}
           questionTime={questionTime}
+          selectionDisableTime={selectionDisableTime}
+          totalQuestions={totalQuestions}
         />
       )}
     </div>
