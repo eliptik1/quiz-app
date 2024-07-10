@@ -31,8 +31,10 @@ function App() {
   };
 
   return (
-    <div className="bg-gradient-to-t from-slate-200 to-neutral-300 min-h-screen mx-auto p-4 flex flex-col gap-4 justify-center items-center">
-      <h1 className="text-3xl font-bold mb-4 text-center">Quiz App</h1>
+    <div className="bg-gradient-to-t from-slate-200 to-neutral-300 min-h-screen mx-auto md:p-4 flex flex-col gap-4 justify-center max-md:justify-center items-center">
+      {!isQuizStarted && (
+        <h1 className="text-3xl font-bold mb-4 text-center">Quiz App</h1>
+      )}
       {!isQuizStarted ? (
         <div className="flex flex-col items-center w-[250px]">
           <TimeSelectButtons
@@ -61,14 +63,16 @@ function App() {
           </button>
         </div>
       ) : (
-        <Quiz
-          key={quizKey}
-          onRestart={restartQuiz}
-          onExit={exitQuiz}
-          questionTime={questionTime}
-          selectionDisableTime={selectionDisableTime}
-          totalQuestions={totalQuestions}
-        />
+        <div>
+          <Quiz
+            key={quizKey}
+            onRestart={restartQuiz}
+            onExit={exitQuiz}
+            questionTime={questionTime}
+            selectionDisableTime={selectionDisableTime}
+            totalQuestions={totalQuestions}
+          />
+        </div>
       )}
     </div>
   );

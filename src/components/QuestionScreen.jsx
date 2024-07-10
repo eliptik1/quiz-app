@@ -11,7 +11,7 @@ export const QuestionScreen = ({
   onExit,
 }) => {
   return (
-    <div className="flex flex-col items-center w-[700px] shadow-lg bg-white p-8 rounded-2xl">
+    <div className="flex flex-col items-center w-[700px] max-md:w-[350px] shadow-lg bg-white p-8 rounded-2xl">
       <div className="w-full">
         <button
           onClick={onExit}
@@ -26,14 +26,14 @@ export const QuestionScreen = ({
         canChoose={canChoose}
         currentQuestion={currentQuestion}
       />
-      <div className="flex gap-2 self-start justify-center mt-8 text-xl">
+      <div className="flex gap-2 self-start justify-center mt-8 text-xl max-md:text-lg max-md:flex-col">
         <h3 className="text-nowrap text-zinc-800">
           Question {currentQuestion + 1}/{totalQuestions}:
         </h3>
         <p>{question.title}</p>
       </div>
 
-      <div className="flex gap-3 w-full mt-32">
+      <div className="flex gap-3 w-full mt-32 max-md:mt-10 max-md:flex-col">
         {options.map((option, index) => (
           <button
             key={index}
